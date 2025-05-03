@@ -1,61 +1,154 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+# Fullstack Signup Project – Laravel Backend + Vue.js Web + Android App
 
-## About Laravel
+This project includes a Laravel API backend with two frontend clients: a Vue.js web form and a native Android app. Users can register through either frontend, and their data is stored securely with email confirmation handled via Laravel Queues.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🔧 Backend – Laravel API
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 📌 Features
 
-## Learning Laravel
+- API endpoint to handle signup requests
+- Input validation (name, email, password)
+- User data stored in `users` table with hashed passwords
+- Confirmation email sent asynchronously via Laravel Queues (Redis or database driver)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 📁 API Route
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+POST /api/signup
+```
 
-## Laravel Sponsors
+#### Request Body
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "12345678"
+}
+```
 
-### Premium Partners
+### ✅ Validation Rules
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[OP.GG](https://op.gg)**
+- `name` – required
+- `email` – required, valid email, unique
+- `password` – required, minimum 8 characters
 
-## Contributing
+### 📨 Queue & Email
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- After registration, a welcome email is queued and sent using Laravel's queue system.
+- Ensure queue worker is running:  
+  ```bash
+  php artisan queue:work
+  ```
 
-## Code of Conduct
+### 🗄️ Database Schema – users table
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Field       | Type      |
+|-------------|-----------|
+| id          | bigint    |
+| name        | string    |
+| email       | string    |
+| password    | string (hashed) |
+| created_at  | timestamp |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🌐 Frontend – Vue.js Web Form
 
-## License
+### 📋 Features
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Basic registration form
+- Input validation (required fields, valid email, password min length)
+- Sends data to Laravel API via `axios`
+
+### 📁 Form Fields
+
+- Name
+- Email
+- Password
+
+### 🔒 Validation
+
+- All fields required
+- Email must be valid
+- Password: minimum 8 characters
+
+### 📡 API Call
+
+```js
+axios.post('/api/signup', {
+  name: this.name,
+  email: this.email,
+  password: this.password
+})
+```
+
+### 🚀 Launch Instructions
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## 📱 Frontend – Android App (Java or Kotlin)
+
+### 📋 Features
+
+- Signup form with same fields
+- Uses Volley for HTTP requests
+- Displays success or error based on API response
+
+### 🔄 Integration
+
+- Endpoint: `https://your-domain.com/api/signup`
+- Same request format and validations
+
+---
+
+## ⚙️ Example `.env.example` (Backend)
+
+```dotenv
+APP_NAME=Laravel
+APP_ENV=local
+APP_KEY=base64:xxxx
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=signup_app
+DB_USERNAME=root
+DB_PASSWORD=
+
+QUEUE_CONNECTION=database
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=your_mail_username
+MAIL_PASSWORD=your_mail_password
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=welcome@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+---
+
+## ✅ Deployment Tips
+
+- Ensure `.env` is configured correctly for mail and queue
+- Run `php artisan migrate` to create tables
+- Run `php artisan queue:work` to process queued emails
+- Use Postman or frontend clients to test signup
+
+---
+
+## 📌 Notes
+
+- Always validate on both frontend and backend
+- Do not expose sensitive environment variables in frontend code
