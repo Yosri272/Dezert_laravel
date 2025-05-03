@@ -128,13 +128,13 @@ DB_PASSWORD=
 
 QUEUE_CONNECTION=database
 MAIL_MAILER=smtp
-MAIL_HOST=smtp.mailtrap.io
-MAIL_PORT=2525
-MAIL_USERNAME=your_mail_username
-MAIL_PASSWORD=your_mail_password
-MAIL_ENCRYPTION=null
-MAIL_FROM_ADDRESS=welcome@example.com
-MAIL_FROM_NAME="${APP_NAME}"
+MAIL_HOST=smtp.hostinger.com
+MAIL_PORT=465
+MAIL_USERNAME=suport@wepower.host
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS=suport@wepower.host
+MAIL_FROM_NAME="${APP_NAME}" 
 ```
 
 ---
